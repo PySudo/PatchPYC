@@ -50,17 +50,19 @@ class Patch:
             out += '\n'+f'{counter:x}'.zfill(8)+'\t'
         return out[:-10:]
 
-    def Patch(self, outfile):
+    def Patch(self, outfile, number):
         patched = bytearray(self.readBinary(0))
         data = bytearray(self.readBinary())
         locations = self.FindByte(data)
         out = self.Show(data)
         print(out)
-        for n in locations:
+        for counter, n in enumerate(locations):
+            if counter >= number:
+                break
             patched[n+16] = self.r
         with open(outfile, 'wb') as i:
             i.write(patched)
 
 
-x = Patch('FILE_NAME.pyc', 'OPERATION', 00000, 'OPERATION YOU WANT TO REPLACE')
-x.Patch('OUT_FILE.pyc')
+x = Patch('FILENAME.pyc', 'OPERATION', 0000, 'OPERATION THAT YOU WANT TO REPLACE')
+x.Patch('OUT_FILE.pyc', 1)
